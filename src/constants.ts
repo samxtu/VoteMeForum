@@ -1,1 +1,14 @@
+import ne from "dotenv";
+ne.config();
 export const __prod__ = process.env.NODE_ENV === "production";
+export const customSecret = process.env.MY_SESSION_SECRET;
+export const COOKIE_NAME = "xtu";
+export const FRONT_END_ORIGIN = "http://localhost:3000";
+export const DB_NAME = "votemeforum";
+export const DB_USER = "postgres";
+export const DB_PASSWORD = "postgres";
+export const DB_TYPE = "postgres";
+export const FORGET_PASSWORD_PREFIX = "forget_password";
+export const SENDER_EMAIL = process.env.MY_SENDER_EMAIL;
+export const SENDER_EMAIL_PASSWORD = process.env.MY_SENDER_EMAIL_PASSWORD;
+export const EMAIL_SERVER = process.env.MY_SSL_EMAIL_SERVER;
