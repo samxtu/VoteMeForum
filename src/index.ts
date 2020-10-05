@@ -20,21 +20,30 @@ import Redis from "ioredis";
 import session from "express-session";
 import connectRedis from "connect-redis";
 import cors from "cors";
-import { Post } from "./entities/Post";
-import { User } from "./entities/User";
+// import { User } from "./entities/User";
+// import { Post } from "./entities/Post";
+import path from "path";
 // import { sendEmail } from "./utils/sendEmail";
 
 const main = async () => {
   // sendEmail("info@newsfeedxtra.com", "This is testing nodemailer!!!");
-  createConnection({
+  const conn = await createConnection({
     type: DB_TYPE,
     database: DB_NAME,
     username: DB_USER,
     password: DB_PASSWORD,
     logging: true,
-    synchronize: true,
-    entities: [Post, User],
+    synchronize: false,
+    entities: [path.join(__dirname, "./entities/*")],
+    migrations: [path.join(__dirname, "./migrations/*")],
+    cli: {
+      migrationsDir: "./migrations",
+    },
   });
+
+  // await conn.runMigrations();
+
+  console.log("Connected to db: ", conn.isConnected);
   const app = express();
   const RedisStore = connectRedis(session);
   const redis = new Redis();

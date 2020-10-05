@@ -9,6 +9,8 @@ import {
   InputType,
   Field,
   ObjectType,
+  FieldResolver,
+  Root,
 } from "type-graphql";
 import dragon from "argon2";
 import {
@@ -53,8 +55,14 @@ class UserResponse {
   user?: User;
 }
 
-@Resolver()
+@Resolver(User)
 export class UserResolver {
+  @FieldResolver(() => String)
+  email(@Root() user: User, @Ctx() { req }: MyContext) {
+    if (req.session.userId === user.id) return user.email;
+    return "";
+  }
+
   @Mutation(() => Boolean)
   async forgotPassword(
     @Arg("email") email: string,
@@ -142,6 +150,7 @@ export class UserResolver {
         email: params.email,
         password: hashedPassword,
       }).save();
+      console.log("user: ", user);
     } catch (err) {
       if (err.code === "23505")
         return {
@@ -152,6 +161,7 @@ export class UserResolver {
             },
           ],
         };
+      console.error(err.message);
       return {
         errors: [
           {
